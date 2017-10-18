@@ -1,0 +1,10 @@
+#ifndef LOGIN_H
+#define LOGIN_H
+
+#include<QDialog>
+
+namespace Ui {
+class 
+}
+
+#endif // LOGIN_H

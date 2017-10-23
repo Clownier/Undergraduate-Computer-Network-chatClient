@@ -2,8 +2,9 @@
 #define LOGINDIALOG_H
 
 #include <QDialog>
-#include <clientsocket.h>
 #include <QDebug>
+#include "clientsocket.h"
+#include "registerdialog.h"
 
 namespace Ui {
 class loginDialog;

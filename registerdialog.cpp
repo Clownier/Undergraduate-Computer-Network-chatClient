@@ -37,6 +37,10 @@ void registerDialog::on_registerBut_clicked()
 
     QByteArray byte_array = document.toJson(QJsonDocument::Compact);
     QString json_str(byte_array);
+
+    sprintf(mChatClient.sendBuf,"%s",json_str.toUtf8().data());
+    mChatClient.send();
+
 }
 
 void registerDialog::on_cancelBut_clicked()

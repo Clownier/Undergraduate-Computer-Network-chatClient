@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "clientsocket.h"
+//#include "clientsocket.h"
 #include "logindialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :

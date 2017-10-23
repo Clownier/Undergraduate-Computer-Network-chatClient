@@ -45,10 +45,17 @@ void Chat_Client::bind(){
 }
 
 void Chat_Client::connect() {
+
+    QSettings *configIniWrite = new QSettings("test.ini",QSettings::IniFormat);
+    QString QserverIP = configIniWrite->value("ip/serverIP").toString();
+    string serverIP = QserverIP.toStdString();
+    int serverPort = configIniWrite->value("port/serverPort").toInt();
+    delete configIniWrite;
+
     sockaddr_in addr;
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(SERVER_PORT);
-    addr.sin_addr.S_un.S_addr = inet_addr(SERVER_IP.c_str());
+    addr.sin_port = htons(serverPort);
+    addr.sin_addr.S_un.S_addr = inet_addr(serverIP.c_str());
     if (::connect(client_Socket, (LPSOCKADDR)&addr, sizeof(addr))==SOCKET_ERROR) {
         sprintf(error,"Client socket connect error!\tcode: %d\n",WSAGetLastError());
         qDebug()<<error;

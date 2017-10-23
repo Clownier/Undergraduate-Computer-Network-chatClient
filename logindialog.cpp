@@ -41,5 +41,9 @@ void loginDialog::on_loginButton_2_clicked()
 
 void loginDialog::on_registerButton_2_clicked()
 {
-
+    registerDialog dialog(mChatClient,this);
+    dialog.setModal(true);
+    if(dialog.exec() != QDialog::Accepted ){
+        qDebug()<<"register error!";
+    }
 }

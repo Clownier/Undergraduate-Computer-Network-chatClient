@@ -27,14 +27,21 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     clientsocket.cpp \
-    logindialog.cpp
+    logindialog.cpp \
+    baseheader.cpp \
+    registerdialog.cpp
 
 HEADERS += \
         mainwindow.h \
     baseheader.h \
     clientsocket.h \
-    logindialog.h
+    logindialog.h \
+    registerdialog.h
 
 FORMS += \
         mainwindow.ui \
-    logindialog.ui
+    logindialog.ui \
+    registerdialog.ui
+
+DISTFILES += \
+    server.cfg

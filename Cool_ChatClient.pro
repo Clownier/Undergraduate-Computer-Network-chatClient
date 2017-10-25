@@ -44,4 +44,5 @@ FORMS += \
     registerdialog.ui
 
 DISTFILES += \
-    server.cfg
+    server.cfg \
+    ../build-Cool_ChatClient-Desktop_Qt_5_9_1_MinGW_32bit-Debug/test.ini

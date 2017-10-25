@@ -26,7 +26,16 @@ void loginDialog::on_loginButton_2_clicked()
 {
     *userName = ui->userName->text();
     *password = ui->password_2->text();
-    sprintf(mChatClient.sendBuf,"%s#*#*2461538790*#*#%s",userName->toUtf8().data(),password->toUtf8().data());
+    QJsonArray array;
+    array.insert(0,"login");
+    array.insert(1,*userName);
+    array.insert(2,*password);
+    QJsonDocument document;
+    document.setArray(array);
+    QByteArray byte = document.toJson(QJsonDocument::Compact);
+    string login = byte.toStdString();
+    sprintf(mChatClient.sendBuf,"%s",login.c_str());
+    //sprintf(mChatClient.sendBuf,"%s#*#*2461538790*#*#%s",userName->toUtf8().data(),password->toUtf8().data());
     mChatClient.send();
     //loginDialog::close();
     string ack = "000";

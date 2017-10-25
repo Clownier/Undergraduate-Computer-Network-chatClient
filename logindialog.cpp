@@ -27,7 +27,7 @@ void loginDialog::on_loginButton_2_clicked()
     *userName = ui->userName->text();
     *password = ui->password_2->text();
     QJsonArray array;
-    array.insert(0,"login");
+    array.insert(0,0);
     array.insert(1,*userName);
     array.insert(2,*password);
     QJsonDocument document;
@@ -35,16 +35,22 @@ void loginDialog::on_loginButton_2_clicked()
     QByteArray byte = document.toJson(QJsonDocument::Compact);
     string login = byte.toStdString();
     sprintf(mChatClient.sendBuf,"%s",login.c_str());
-    //sprintf(mChatClient.sendBuf,"%s#*#*2461538790*#*#%s",userName->toUtf8().data(),password->toUtf8().data());
     mChatClient.send();
-    //loginDialog::close();
-    string ack = "000";
-    while(ack.find("#*#*2461538790*#*#id:")==string::npos){
+    string ack;
+    while(ack.length()==0){
         ack = mChatClient.recv();
     }
-    ack = ack.substr(21);
-    qDebug()<<"ack = "<<ack.c_str()<<"\n";
-    accept();
+    QJsonParseError *error = new QJsonParseError;
+    QString qAck = QString::fromStdString(ack);
+    array = QJsonDocument::fromJson(qAck.toLatin1(),error).array();
+    if(array.at(0).toInt() == 1){
+        qDebug()<<array.at(1).toString();
+        accept();
+    }else{
+        qDebug()<<array.at(1).toString();
+        QMessageBox::critical(NULL, "critical", array.at(1).toString(), QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        reject();
+    }
 }
 
 

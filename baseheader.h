@@ -15,6 +15,7 @@
 #include<QJsonDocument>
 #include<QJsonObject>
 #include<QJsonParseError>
+#include<QMessageBox>
 
 #define BUFLEN 255
 //#define SERVER_PORT  5050

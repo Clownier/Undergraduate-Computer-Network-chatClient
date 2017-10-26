@@ -17,8 +17,14 @@ public:
     ~MainWindow();
     Chat_Client mChatClient;
 
+private slots:
+    void on_userListWidget_currentTextChanged(const QString &currentText);
+
 private:
     Ui::MainWindow *ui;
+    QListWidget *userList;
+    void initListWidget();
+    QString MyName;
 };
 
 #endif // MAINWINDOW_H

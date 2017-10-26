@@ -62,7 +62,7 @@ void Chat_Client::connect() {
         closesocket(client_Socket);
         WSACleanup();
     }else
-        printf("connect Server success!\n");
+        qDebug()<<"connect Server success!\n";
 }
 
 int Chat_Client::send(string sendBuf) {

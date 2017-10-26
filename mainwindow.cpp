@@ -15,19 +15,39 @@ MainWindow::MainWindow(QWidget *parent) :
     QString *password = new QString;
     loginDialog login(mChatClient,userName,password,this);
     login.setModal(true);
-    if(login.exec() != QDialog::Accepted)
-        qDebug()<<"error!";
-//    sprintf(mChatClient.sendBuf,"userName:%s\tpassword:%s",userName->toUtf8().data(),password->toUtf8().data());
-//    mChatClient.send();
+    if(login.exec() == QDialog::Accepted){
+        initListWidget();
+        qDebug()<<"login success!";
+    }
+    else
+        QTimer::singleShot(0, this, SLOT(close()));
 
-//    for(int i =0;i<5;i++){
-//        sprintf(mChatClient.sendBuf,"this is %d send!",i);
-//        mChatClient.send();
-//    }
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     mChatClient.close();
+}
+
+void MainWindow::initListWidget(){
+    string ack;
+    while(ack.length()==0){
+        ack = mChatClient.recv();
+    }
+    QJsonParseError *error = new QJsonParseError;
+    QString qAck = QString::fromStdString(ack);
+    QJsonArray array = QJsonDocument::fromJson(qAck.toLatin1(),error).array();
+    userList=ui->userListWidget;
+    if(array.at(0).toInt() == 258){
+        QStringList strlist = array.at(1).toString().split("#");
+        QString info = strlist.at(0);
+        userList->addItems(info.split(";"));
+        MyName = strlist.at(1);
+    }
+}
+
+void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText)
+{
+    Q_UNUSED(currentText);
 }

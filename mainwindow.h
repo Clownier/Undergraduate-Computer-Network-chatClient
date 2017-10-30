@@ -24,6 +24,7 @@ private:
     Ui::MainWindow *ui;
     QListWidget *userList;
     void initListWidget();
+    QString recvInfo();
     QString MyName;
 };
 

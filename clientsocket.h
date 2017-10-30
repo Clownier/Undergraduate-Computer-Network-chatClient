@@ -17,6 +17,8 @@ public:
     int send();
     void close();
     string recv();
+    QString Qrecv();
+    int Qsend(QString);
     //全局的临界区保护变量，以保护主线程和子线程都要访问的sendBuf
     //CRITICAL_SECTION gCriticalSection;
     //unsigned __stdcall GetInputs(void *arg);

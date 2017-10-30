@@ -78,15 +78,29 @@ int Chat_Client::send(){
     qDebug()<<sendBuf;
     return send(sendBuf);
 }
+int Chat_Client::Qsend(QString buf){
+    QString len = QString::number(buf.length(),10);
+    sprintf(sendBuf,"%s,%s",len.toStdString().data(),buf.toStdString().data());
+    return send();
+}
 
 string Chat_Client::recv(){
-    //char recbuf[BUFLEN + 1];
     memset(recvBuf,'\0',BUFLEN);
     int nRC = ::recv(client_Socket, recvBuf, BUFLEN, 0);
     recvBuf[nRC] = '\0';
     qDebug()<<"recvBuf = "<<recvBuf<<"\n";
     string res(recvBuf);
     return res;
+}
+
+QString Chat_Client::Qrecv(){
+    memset(recvBuf,'\0',BUFLEN);
+    int nRC = ::recv(client_Socket,recvBuf,BUFLEN,0);
+    QString res = QString::fromStdString(recvBuf);
+    int index = res.indexOf(",");
+    int len = res.mid(0,index).toInt();
+    qDebug()<<"len = "<<len<<"Qrecv() ="<<recvBuf<<"\n";
+    return res.mid(index+1,len);
 }
 
 void Chat_Client::close(){

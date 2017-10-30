@@ -8,6 +8,8 @@ loginDialog::loginDialog(Chat_Client &client,QString *Name, QString *Pass, QWidg
 {
     ui->setupUi(this);
     ui->password_2->setEchoMode(QLineEdit::Password);
+    ui->password_2->setText("123");
+    ui->userName->setText("123");
     userName = Name;
     password = Pass;
 }

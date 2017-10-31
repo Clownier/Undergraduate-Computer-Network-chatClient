@@ -60,5 +60,5 @@ void MainWindow::initListWidget(){
 
 void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText)
 {
-    Q_UNUSED(currentText);
+    qDebug()<<currentText.toStdString().data()<<"is clicked!";
 }

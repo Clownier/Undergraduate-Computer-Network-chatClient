@@ -60,5 +60,12 @@ void MainWindow::initListWidget(){
 
 void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText)
 {
+    ui->widgetChat->clear();
     qDebug()<<currentText.toStdString().data()<<"is clicked!";
+    ui->textEditSnd->setText(currentText);
+}
+
+void MainWindow::on_sendText_clicked()
+{
+    ui->widgetChat->addItem(ui->textEditSnd->toPlainText(),0);
 }

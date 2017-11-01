@@ -29,14 +29,18 @@ SOURCES += \
     clientsocket.cpp \
     logindialog.cpp \
     baseheader.cpp \
-    registerdialog.cpp
+    registerdialog.cpp \
+    chatbubble.cpp \
+    myapp.cpp
 
 HEADERS += \
         mainwindow.h \
     baseheader.h \
     clientsocket.h \
     logindialog.h \
-    registerdialog.h
+    registerdialog.h \
+    chatbubble.h \
+    myapp.h
 
 FORMS += \
         mainwindow.ui \
@@ -44,5 +48,4 @@ FORMS += \
     registerdialog.ui
 
 DISTFILES += \
-    server.cfg \
     ../build-Cool_ChatClient-Desktop_Qt_5_9_1_MinGW_32bit-Debug/test.ini

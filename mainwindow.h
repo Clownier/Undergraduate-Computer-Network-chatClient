@@ -20,6 +20,8 @@ public:
 private slots:
     void on_userListWidget_currentTextChanged(const QString &currentText);
 
+    void on_sendText_clicked();
+
 private:
     Ui::MainWindow *ui;
     QListWidget *userList;

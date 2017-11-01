@@ -23,6 +23,7 @@ public:
     //CRITICAL_SECTION gCriticalSection;
     //unsigned __stdcall GetInputs(void *arg);
     char sendBuf[BUFLEN], recvBuf[BUFLEN],error[BUFLEN];
+    //static QString myUuid;
 
 private:
     //FD_SET rfds, wfds;

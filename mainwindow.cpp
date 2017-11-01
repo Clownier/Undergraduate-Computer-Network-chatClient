@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     login.setModal(true);
     if(login.exec() == QDialog::Accepted){
         qDebug()<<"login success!";
+        MyUuid = *userName;
+        qDebug()<<MyUuid.toStdString().data();
         initListWidget();
     }
     else
@@ -56,16 +58,40 @@ void MainWindow::initListWidget(){
     QString info = strlist.at(0);
     userList->addItems(info.split(";"));
     MyName = strlist.at(1);
+    QString recv;
+    while(1){
+        recv = mChatClient.Qrecv();
+        if(recv.length()==0)
+            continue;
+        //TODO carry recv
+    }
 }
 
 void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText)
 {
+    //点击用户，将界面刷新
+    //TODO 将用户id传到服务器,返回用户是否在线
     ui->widgetChat->clear();
     qDebug()<<currentText.toStdString().data()<<"is clicked!";
-    ui->textEditSnd->setText(currentText);
+    //ui->textEditSnd->setText(currentText);
+    ui->currentUser->setText(currentText);
 }
 
 void MainWindow::on_sendText_clicked()
 {
-    ui->widgetChat->addItem(ui->textEditSnd->toPlainText(),0);
+    //将消息发送到服务器
+    QString currID = ui->currentUser->text();
+    int  index = currID.indexOf("{");
+    currID = currID.mid(index,currID.length()-index);
+    qDebug()<<currID;
+    QString send = ui->textEditSnd->toPlainText();
+    ui->widgetChat->addItem(send,2);
+    QJsonArray arr;arr.insert(0,584);
+    arr.insert(1,currID);arr.insert(2,MyUuid);
+    arr.insert(3,send);QJsonDocument doc;
+    doc.setArray(arr);
+    send = doc.toJson(QJsonDocument::Compact);
+    qDebug()<<send;
+    mChatClient.Qsend(send);
+    ui->widgetChat->addItem("this is once",1);
 }

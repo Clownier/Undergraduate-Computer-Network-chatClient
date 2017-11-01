@@ -95,12 +95,16 @@ string Chat_Client::recv(){
 
 QString Chat_Client::Qrecv(){
     memset(recvBuf,'\0',BUFLEN);
-    int nRC = ::recv(client_Socket,recvBuf,BUFLEN,0);
-    QString res = QString::fromStdString(recvBuf);
-    int index = res.indexOf(",");
-    int len = res.mid(0,index).toInt();
-    qDebug()<<"len = "<<len<<"Qrecv() ="<<recvBuf<<"\n";
-    return res.mid(index+1,len);
+    /*int nRC = */::recv(client_Socket,recvBuf,BUFLEN,0);
+    QString temp,res = QString::fromStdString(recvBuf);
+    temp.append(surplus);
+    surplus = QString::fromStdString(&recvBuf[res.length()+1]);
+    surplus = surplus.mid(0,surplus.length()-1);
+    temp.append(res);
+    int index = temp.indexOf(",");
+    int len = temp.mid(0,index).toInt();
+    qDebug()<<"len = "<<len<<"Qrecv() ="<<temp<<"sur ="<<surplus<<"\n";
+    return temp.mid(index+1,len);
 }
 
 void Chat_Client::close(){

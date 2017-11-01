@@ -28,6 +28,7 @@ private:
     void initListWidget();
     QString recvInfo();
     QString MyName;
+    QString MyUuid;
 };
 
 #endif // MAINWINDOW_H

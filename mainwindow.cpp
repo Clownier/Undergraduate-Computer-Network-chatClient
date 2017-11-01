@@ -56,15 +56,16 @@ void MainWindow::initListWidget(){
     userList=ui->userListWidget;
     QStringList strlist = Info.split("#");
     QString info = strlist.at(0);
+    userList->addItem("CoolChat小助手{00000}");
     userList->addItems(info.split(";"));
     MyName = strlist.at(1);
     QString recv;
-    while(1){
-        recv = mChatClient.Qrecv();
-        if(recv.length()==0)
-            continue;
-        //TODO carry recv
-    }
+//    while(1){
+//        recv = mChatClient.Qrecv();
+//        if(recv.length()==0)
+//            continue;
+//        //TODO carry recv
+//    }
 }
 
 void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText)

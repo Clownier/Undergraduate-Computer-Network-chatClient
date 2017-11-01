@@ -29,6 +29,7 @@ private:
     //FD_SET rfds, wfds;
     SOCKET client_Socket;
     WSADATA wD;
+    QString surplus;
 };
 
 

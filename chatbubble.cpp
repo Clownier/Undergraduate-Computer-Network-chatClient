@@ -534,13 +534,14 @@ void BubbleListPrivate::addItem(const QString &str, const int &orientation)
 void BubbleListPrivate::clear()
 {
     m_IIVec.clear();
-    m_currIndex = 0;
-    m_VisibleItemCnt = 0;
-    m_ItemCounter = 0;
+    wheelDown();
+//    m_currIndex = 0;
+//    m_VisibleItemCnt = 0;
+//    m_ItemCounter = 0;
 
-    m_bAllJobsDone = false;
+//    m_bAllJobsDone = false;
 
-    update();
+//    update();
 }
 
 void BubbleListPrivate::render()

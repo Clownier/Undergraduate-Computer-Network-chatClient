@@ -28,11 +28,14 @@ private:
     QListWidget *userList;
     void initListWidget();
     void listenOther();
+    void recv();
     QString recvInfo();
     QString MyName;
     QString MyUuid;
     QString aimUserUuid;
     bool aimUserOnline;
+    std::thread otherThread;
+    bool first =true;
 };
 
 #endif // MAINWINDOW_H

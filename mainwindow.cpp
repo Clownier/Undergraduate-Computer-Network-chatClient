@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
         sub.detach();
         MyUuid = *userName;
         qDebug()<<MyUuid.toStdString().data();
+        otherThread = std::thread(&MainWindow::recv,this);
         initListWidget();
     }
     else
@@ -36,11 +37,34 @@ MainWindow::~MainWindow()
 void MainWindow::listenOther(){
     ServerSocket server(mChatClient.serverPort+1);
     while(1){
-        Chat_Client socket = server.poll();
+        aimSocket = server.poll();
         QString address;
         address.sprintf( "the other user from %s:%d visit!\n",
-                         inet_ntoa(socket.client_Addr.sin_addr),socket.client_Addr.sin_port);
+                         inet_ntoa(aimSocket.client_Addr.sin_addr),aimSocket.client_Addr.sin_port);
         qDebug()<<address;
+        if(first){
+            otherThread.detach();
+            first = false;
+        }
+    }
+}
+
+void MainWindow::recv(){
+    while(1){
+        QString text = aimSocket.Qrecv();
+        if(text.length() == 0){
+            continue;
+        }
+        QJsonParseError *error = new QJsonParseError;
+        QJsonArray array = QJsonDocument::fromJson(text.toLatin1(),error).array();
+        if(array.at(0).toInt() == 327){
+            QString Name = array.at(1).toString();
+            Name.append("(online)");
+            ui->currentUser->setText(Name);
+            ui->widgetChat->clear();
+        }else if(array.at(0).toInt() == 328){
+            ui->widgetChat->addItem(array.at(1).toString(),1);
+        }
     }
 }
 
@@ -109,6 +133,14 @@ void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText
         aimSocket.create();
         aimSocket.bind();
         aimSocket.connect(aimIp,aimPort+1);
+        QJsonArray arr;arr.insert(0,327);arr.insert(1,MyName);
+        QJsonDocument doc;doc.setArray(arr);
+        QString send = doc.toJson(QJsonDocument::Compact);
+        aimSocket.Qsend(send);
+        if(first){
+            otherThread.detach();
+            first = false;
+        }
     }
     else{
         aimUserOnline = false;
@@ -120,15 +152,22 @@ void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText
 
 void MainWindow::on_sendText_clicked()
 {
-    //将消息发送到服务器
     QString send = ui->textEditSnd->toPlainText();
     ui->widgetChat->addItem(send,2);
-    QJsonArray arr;arr.insert(0,584);
-    arr.insert(1,aimUserOnline);arr.insert(2,MyUuid);
-    arr.insert(3,send);QJsonDocument doc;
-    doc.setArray(arr);
-    send = doc.toJson(QJsonDocument::Compact);
-    qDebug()<<send;
-    mChatClient.Qsend(send);
-    ui->widgetChat->addItem("this is once",1);
+    QJsonArray arr;
+    if(!aimUserOnline){
+        //将消息发送到服务器
+        arr.insert(0,584);
+        arr.insert(1,aimUserOnline);arr.insert(2,MyUuid);
+        arr.insert(3,send);QJsonDocument doc;
+        doc.setArray(arr);
+        send = doc.toJson(QJsonDocument::Compact);
+        mChatClient.Qsend(send);
+        ui->widgetChat->addItem("this is once",1);
+    }else{
+        arr.insert(0,328);arr.insert(1,send);
+        QJsonDocument doc;doc.setArray(arr);
+        send = doc.toJson(QJsonDocument::Compact);
+        aimSocket.Qsend(send);
+    }
 }

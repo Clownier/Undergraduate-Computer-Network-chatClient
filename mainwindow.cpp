@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     else
         QTimer::singleShot(0, this, SLOT(close()));
-
+    connect(this,SIGNAL(getData(QString)),this,SLOT(showOtherText(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -62,10 +62,16 @@ void MainWindow::recv(){
             Name.append("(online)");
             ui->currentUser->setText(Name);
             ui->widgetChat->clear();
+            aimUserOnline = true;
         }else if(array.at(0).toInt() == 328){
-            ui->widgetChat->addItem(array.at(1).toString(),1);
+            QString text = array.at(1).toString();
+            emit getData(text);
         }
     }
+}
+
+void MainWindow::showOtherText(QString text){
+    ui->widgetChat->addItem(text,1);
 }
 
 QString MainWindow::recvInfo(){

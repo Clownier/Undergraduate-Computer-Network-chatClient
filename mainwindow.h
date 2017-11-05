@@ -18,9 +18,12 @@ public:
     ~MainWindow();
     Chat_Client mChatClient,aimSocket;
 
+signals:
+    void getData(QString);
+
 private slots:
     void on_userListWidget_currentTextChanged(const QString &currentText);
-
+    void showOtherText(QString);
     void on_sendText_clicked();
 
 private:

@@ -31,7 +31,8 @@ SOURCES += \
     baseheader.cpp \
     registerdialog.cpp \
     chatbubble.cpp \
-    myapp.cpp
+    myapp.cpp \
+    serversocket.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +41,8 @@ HEADERS += \
     logindialog.h \
     registerdialog.h \
     chatbubble.h \
-    myapp.h
+    myapp.h \
+    serversocket.h
 
 FORMS += \
         mainwindow.ui \

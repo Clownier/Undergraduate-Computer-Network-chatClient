@@ -101,3 +101,9 @@ void PrintConfig(const map<string, string> & m)
         qDebug() << QString::fromStdString(mite->first) << "=" << QString::fromStdString(mite->second) << endl;
     }
 }
+void showCritical(const QString content){
+    QMessageBox::critical(NULL,
+            "critical", content,
+            QMessageBox::Yes | QMessageBox::No,
+            QMessageBox::Yes);
+}

@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     login.setModal(true);
     if(login.exec() == QDialog::Accepted){
         qDebug()<<"login success!";
+        std::thread sub(&MainWindow::listenOther,this);
+        sub.detach();
         MyUuid = *userName;
         qDebug()<<MyUuid.toStdString().data();
         initListWidget();
@@ -31,6 +33,17 @@ MainWindow::~MainWindow()
     delete ui;
     mChatClient.close();
 }
+void MainWindow::listenOther(){
+    ServerSocket server(mChatClient.serverPort+1);
+    while(1){
+        Chat_Client socket = server.poll();
+        QString address;
+        address.sprintf( "the other user from %s:%d visit!\n",
+                         inet_ntoa(socket.client_Addr.sin_addr),socket.client_Addr.sin_port);
+        qDebug()<<address;
+    }
+}
+
 QString MainWindow::recvInfo(){
     QString res;
     while(true){
@@ -41,6 +54,7 @@ QString MainWindow::recvInfo(){
         qDebug()<<"ack = "<<ack<<"\n";
         QJsonParseError *error = new QJsonParseError;
         QJsonArray array = QJsonDocument::fromJson(ack.toLatin1(),error).array();
+        qDebug()<<error->errorString();
         if(array.at(0).toInt() == 258){
             res.append(array.at(1).toString());
         }else if(array.at(0).toInt() == 259){
@@ -60,12 +74,6 @@ void MainWindow::initListWidget(){
     userList->addItems(info.split(";"));
     MyName = strlist.at(1);
     QString recv;
-//    while(1){
-//        recv = mChatClient.Qrecv();
-//        if(recv.length()==0)
-//            continue;
-//        //TODO carry recv
-//    }
 }
 
 void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText)
@@ -74,21 +82,49 @@ void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText
     //TODO 将用户id传到服务器,返回用户是否在线
     ui->widgetChat->clear();
     qDebug()<<currentText.toStdString().data()<<"is clicked!";
-    //ui->textEditSnd->setText(currentText);
-    ui->currentUser->setText(currentText);
+    if(currentText == "CoolChat小助手{00000}"){
+        ui->currentUser->setText(currentText);
+        aimUserOnline = false;
+        return;
+    }
+    int  index = currentText.indexOf("{");
+    aimUserUuid = currentText.mid(index,currentText.length()-index);
+    QJsonArray arr;arr.insert(0,583);arr.insert(1,aimUserUuid);
+    QJsonDocument doc;doc.setArray(arr);
+    QString send = doc.toJson(QJsonDocument::Compact);
+    mChatClient.Qsend(send);
+
+
+    QString req = mChatClient.Qrecv();
+    while(req.length() == 0)
+        req = mChatClient.Qrecv();
+    QJsonParseError *error = new QJsonParseError;
+    QJsonArray array = QJsonDocument::fromJson(req.toLatin1(),error).array();
+    QString showText = currentText.mid(0,index);
+    if(array.at(0)==583){
+        aimUserOnline = true;
+        showText.append("(online)");
+        QString aimIp = array.at(1).toString();
+        int aimPort = array.at(2).toInt();
+        aimSocket.create();
+        aimSocket.bind();
+        aimSocket.connect(aimIp,aimPort+1);
+    }
+    else{
+        aimUserOnline = false;
+        showText.append("(offline)");
+    }
+
+    ui->currentUser->setText(showText);
 }
 
 void MainWindow::on_sendText_clicked()
 {
     //将消息发送到服务器
-    QString currID = ui->currentUser->text();
-    int  index = currID.indexOf("{");
-    currID = currID.mid(index,currID.length()-index);
-    qDebug()<<currID;
     QString send = ui->textEditSnd->toPlainText();
     ui->widgetChat->addItem(send,2);
     QJsonArray arr;arr.insert(0,584);
-    arr.insert(1,currID);arr.insert(2,MyUuid);
+    arr.insert(1,aimUserOnline);arr.insert(2,MyUuid);
     arr.insert(3,send);QJsonDocument doc;
     doc.setArray(arr);
     send = doc.toJson(QJsonDocument::Compact);

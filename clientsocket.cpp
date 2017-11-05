@@ -14,6 +14,10 @@ Chat_Client::Chat_Client(){
     else
         qDebug()<<"Client's winsock initialized !\n";
 }
+Chat_Client::Chat_Client(SOCKET socket, sockaddr_in addr):
+    client_Socket(socket),client_Addr(addr){
+
+}
 
 Chat_Client::~Chat_Client(){
     //closesocket(client_Socket);
@@ -64,6 +68,20 @@ void Chat_Client::connect() {
     }else
         qDebug()<<"connect Server success!\n";
 }
+void Chat_Client::connect(QString serverIP,int serverPort) {
+
+    sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(serverPort);
+    addr.sin_addr.S_un.S_addr = inet_addr(serverIP.toStdString().data());
+    if (::connect(client_Socket, (LPSOCKADDR)&addr, sizeof(addr))==SOCKET_ERROR) {
+        sprintf(error,"Client socket connect error!\tcode: %d\n",WSAGetLastError());
+        qDebug()<<error;
+        closesocket(client_Socket);
+        WSACleanup();
+    }else
+        qDebug()<<"connect Server success!\n";
+}
 
 int Chat_Client::send(string sendBuf) {
     if (::send(client_Socket, sendBuf.c_str(), sendBuf.length() + 1, 0) == SOCKET_ERROR) {
@@ -103,6 +121,8 @@ QString Chat_Client::Qrecv(){
     temp.append(res);
     int index = temp.indexOf(",");
     int len = temp.mid(0,index).toInt();
+    if(len == 0)
+        return "";
     qDebug()<<"len = "<<len<<"Qrecv() ="<<temp<<"sur ="<<surplus<<"\n";
     return temp.mid(index+1,len);
 }

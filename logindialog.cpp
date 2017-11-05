@@ -46,7 +46,11 @@ void loginDialog::on_loginButton_2_clicked()
     QString qAck = QString::fromStdString(ack);
     array = QJsonDocument::fromJson(qAck.toLatin1(),error).array();
     if(array.at(0).toInt() == 1){
-        qDebug()<<array.at(1).toString();
+        QString Uuid = array.at(1).toString();
+        mChatClient.serverIP = array.at(2).toString();
+        mChatClient.serverPort = array.at(3).toInt();
+        qDebug()<<Uuid;
+        *userName = Uuid;
         accept();
     }else{
         qDebug()<<array.at(1).toString();

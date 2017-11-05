@@ -18,6 +18,7 @@
 #include<QMessageBox>
 #include<QListWidget>
 #include<QTimer>
+#include<thread>
 
 #define BUFLEN 255
 //#define SERVER_PORT  5050
@@ -27,5 +28,6 @@
 using namespace std;
 //const string SERVER_IP = "10.10.95.171";
 const WORD W_VERSION_REQUEST = 0x0101;
+void showCritical(const QString content);
 
 #endif // BASEHEADER_H

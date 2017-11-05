@@ -5,13 +5,15 @@
 #include<string>
 
 
-class Chat_Client {
+class  Chat_Client {
 public:
     Chat_Client();
+    Chat_Client(SOCKET socket,sockaddr_in addr);
     ~Chat_Client();
     void create();
     void bind();
     void connect();
+    void connect(QString serverIP,int serverPort);
     //int carry();
     int send(string sendbuf);
     int send();
@@ -23,6 +25,9 @@ public:
     //CRITICAL_SECTION gCriticalSection;
     //unsigned __stdcall GetInputs(void *arg);
     char sendBuf[BUFLEN], recvBuf[BUFLEN],error[BUFLEN];
+    QString serverIP;
+    int serverPort;
+    sockaddr_in client_Addr;
     //static QString myUuid;
 
 private:

@@ -8,6 +8,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->pushButton->setVisible(false);
+    ui->pushButton_2->setVisible(false);
+    ui->pushButton_5->setVisible(false);
+    ui->checkBox->setVisible(false);
     mChatClient.create();
     mChatClient.bind();
     mChatClient.connect();
@@ -21,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
         sub.detach();
         MyUuid = *userName;
         qDebug()<<MyUuid.toStdString().data();
-        otherThread = std::thread(&MainWindow::recv,this);
+
         initListWidget();
     }
     else
@@ -43,6 +47,7 @@ void MainWindow::listenOther(){
                          inet_ntoa(aimSocket.client_Addr.sin_addr),aimSocket.client_Addr.sin_port);
         qDebug()<<address;
         if(first){
+            otherThread = std::thread(&MainWindow::recv,this);
             otherThread.detach();
             first = false;
         }
@@ -144,6 +149,7 @@ void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText
         QString send = doc.toJson(QJsonDocument::Compact);
         aimSocket.Qsend(send);
         if(first){
+            otherThread = std::thread(&MainWindow::recv,this);
             otherThread.detach();
             first = false;
         }

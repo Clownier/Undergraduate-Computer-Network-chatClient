@@ -32,7 +32,8 @@ SOURCES += \
     registerdialog.cpp \
     chatbubble.cpp \
     myapp.cpp \
-    serversocket.cpp
+    serversocket.cpp \
+    forgetdialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -42,12 +43,14 @@ HEADERS += \
     registerdialog.h \
     chatbubble.h \
     myapp.h \
-    serversocket.h
+    serversocket.h \
+    forgetdialog.h
 
 FORMS += \
         mainwindow.ui \
     logindialog.ui \
-    registerdialog.ui
+    registerdialog.ui \
+    forgetdialog.ui
 
 DISTFILES += \
     ../build-Cool_ChatClient-Desktop_Qt_5_9_1_MinGW_32bit-Debug/test.ini

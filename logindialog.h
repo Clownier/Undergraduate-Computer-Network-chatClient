@@ -5,6 +5,7 @@
 #include <QDebug>
 #include "clientsocket.h"
 #include "registerdialog.h"
+#include "forgetdialog.h"
 
 namespace Ui {
 class loginDialog;

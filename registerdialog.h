@@ -2,6 +2,7 @@
 #define REGISTERDIALOG_H
 
 #include <QDialog>
+#include "baseheader.h"
 #include "clientsocket.h"
 
 namespace Ui {

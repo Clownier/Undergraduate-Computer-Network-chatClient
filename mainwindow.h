@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "clientsocket.h"
 #include "serversocket.h"
+#include"baseheader.h"
 
 namespace Ui {
 class MainWindow;
@@ -32,6 +33,7 @@ private:
     void initListWidget();
     void listenOther();
     void recv();
+    void showOfflineMes();
     QString recvInfo();
     QString MyName;
     QString MyUuid;
@@ -39,6 +41,7 @@ private:
     bool aimUserOnline;
     std::thread otherThread;
     bool first =true;
+    std::vector<QString> offlineMes;
 };
 
 #endif // MAINWINDOW_H

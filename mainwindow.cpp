@@ -53,6 +53,21 @@ void MainWindow::listenOther(){
         }
     }
 }
+void MainWindow::showOfflineMes(){
+    vector<QString>::iterator itor;
+    for(itor = offlineMes.begin();itor!=offlineMes.end();itor++){
+        QString str = *itor;
+        if(str.indexOf(aimUserUuid)==-1)
+            continue;
+        QJsonArray arr = QJsonDocument::fromJson(str.toLatin1(),NULL).array();
+
+        if(arr.at(1).toString()==MyUuid){
+            ui->widgetChat->addItem(arr.at(3).toString(),2);
+        }else{
+            ui->widgetChat->addItem(arr.at(3).toString(),1);
+        }
+    }
+}
 
 void MainWindow::recv(){
     while(1){
@@ -76,6 +91,11 @@ void MainWindow::recv(){
 }
 
 void MainWindow::showOtherText(QString text){
+    QJsonArray arr;arr.insert(0,328);
+    arr.insert(1,aimUserUuid);arr.insert(2,MyUuid);
+    arr.insert(3,text);QJsonDocument doc;
+    doc.setArray(arr);
+    offlineMes.push_back(doc.toJson(QJsonDocument::Compact));
     ui->widgetChat->addItem(text,1);
 }
 
@@ -90,7 +110,10 @@ QString MainWindow::recvInfo(){
         QJsonParseError *error = new QJsonParseError;
         QJsonArray array = QJsonDocument::fromJson(ack.toLatin1(),error).array();
         qDebug()<<error->errorString();
-        if(array.at(0).toInt() == 258){
+        if(array.at(0).toInt() == 257){
+            offlineMes.push_back(array.at(1).toString());
+        }
+        else if(array.at(0).toInt() == 258){
             res.append(array.at(1).toString());
         }else if(array.at(0).toInt() == 259){
             res.append(array.at(1).toString());
@@ -108,7 +131,6 @@ void MainWindow::initListWidget(){
     userList->addItem("CoolChat小助手{00000}");
     userList->addItems(info.split(";"));
     MyName = strlist.at(1);
-    QString recv;
 }
 
 void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText)
@@ -170,16 +192,21 @@ void MainWindow::on_sendText_clicked()
     if(!aimUserOnline){
         //将消息发送到服务器
         arr.insert(0,584);
-        arr.insert(1,aimUserOnline);arr.insert(2,MyUuid);
+        arr.insert(1,aimUserUuid);arr.insert(2,MyUuid);
         arr.insert(3,send);QJsonDocument doc;
         doc.setArray(arr);
         send = doc.toJson(QJsonDocument::Compact);
         mChatClient.Qsend(send);
-        ui->widgetChat->addItem("this is once",1);
+//        ui->widgetChat->addItem("this is once",1);
     }else{
         arr.insert(0,328);arr.insert(1,send);
         QJsonDocument doc;doc.setArray(arr);
         send = doc.toJson(QJsonDocument::Compact);
         aimSocket.Qsend(send);
+        arr.replace(1,aimUserUuid);
+        arr.insert(2,MyUuid);
+        arr.insert(3,ui->textEditSnd->toPlainText());
+        doc.setArray(arr);
+        offlineMes.push_back(doc.toJson(QJsonDocument::Compact));
     }
 }

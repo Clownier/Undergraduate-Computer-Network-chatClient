@@ -21,12 +21,12 @@ MainWindow::MainWindow(QWidget *parent) :
     login.setModal(true);
     if(login.exec() == QDialog::Accepted){
         qDebug()<<"login success!";
+        initListWidget();
         std::thread sub(&MainWindow::listenOther,this);
         sub.detach();
         MyUuid = *userName;
         qDebug()<<MyUuid.toStdString().data();
 
-        initListWidget();
     }
     else
         QTimer::singleShot(0, this, SLOT(close()));
@@ -111,7 +111,7 @@ QString MainWindow::recvInfo(){
         QJsonArray array = QJsonDocument::fromJson(ack.toLatin1(),error).array();
         qDebug()<<error->errorString();
         if(array.at(0).toInt() == 257){
-            offlineMes.push_back(array.at(1).toString());
+            offlineMes.push_back(ack);
         }
         else if(array.at(0).toInt() == 258){
             res.append(array.at(1).toString());
@@ -182,6 +182,7 @@ void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText
     }
 
     ui->currentUser->setText(showText);
+    showOfflineMes();
 }
 
 void MainWindow::on_sendText_clicked()

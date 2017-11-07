@@ -113,17 +113,29 @@ string Chat_Client::recv(){
 
 QString Chat_Client::Qrecv(){
     memset(recvBuf,'\0',BUFLEN);
-    /*int nRC = */::recv(client_Socket,recvBuf,BUFLEN,0);
+    if(surplus.length()!=0){
+        QString temp = surplus;
+        int index = temp.indexOf(",");
+        if(index!=-1){
+            int len = temp.mid(0,index).toInt();
+            if(temp.length()>=index+len){
+                surplus = surplus.mid(index+len);
+                return temp.mid(index+1,len);
+            }
+        }
+    }
+    int nRC = ::recv(client_Socket,recvBuf,BUFLEN,0);
     QString temp,res = QString::fromStdString(recvBuf);
     temp.append(surplus);
+    surplus.clear();
     surplus = QString::fromStdString(&recvBuf[res.length()+1]);
-    surplus = surplus.mid(0,surplus.length()-1);
+    surplus = surplus.mid(0,nRC-res.length());
     temp.append(res);
     int index = temp.indexOf(",");
     int len = temp.mid(0,index).toInt();
     if(len == 0)
         return "";
-    qDebug()<<"len = "<<len<<"Qrecv() ="<<temp<<"sur ="<<surplus<<"\n";
+    qDebug()<<"len = "<<len<<"Qrecv() ="<<temp<<"surplus ="<<surplus<<"\n";
     return temp.mid(index+1,len);
 }
 

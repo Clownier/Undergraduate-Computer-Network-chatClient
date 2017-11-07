@@ -19,6 +19,7 @@
 #include<QListWidget>
 #include<QTimer>
 #include<thread>
+#include<QTextCodec>
 
 #define BUFLEN 255
 //#define SERVER_PORT  5050

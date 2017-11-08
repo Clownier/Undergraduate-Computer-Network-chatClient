@@ -62,9 +62,9 @@ void MainWindow::showOfflineMes(){
         QJsonArray arr = QJsonDocument::fromJson(str.toLatin1(),NULL).array();
 
         if(arr.at(1).toString()==MyUuid){
-            ui->widgetChat->addItem(arr.at(3).toString(),2);
-        }else{
             ui->widgetChat->addItem(arr.at(3).toString(),1);
+        }else{
+            ui->widgetChat->addItem(arr.at(3).toString(),2);
         }
     }
 }
@@ -110,7 +110,7 @@ QString MainWindow::recvInfo(){
         QJsonParseError *error = new QJsonParseError;
         QJsonArray array = QJsonDocument::fromJson(ack.toLatin1(),error).array();
         qDebug()<<error->errorString();
-        if(array.at(0).toInt() == 257){
+        if(array.at(0).toInt() == 584){
             offlineMes.push_back(ack);
         }
         else if(array.at(0).toInt() == 258){
@@ -131,6 +131,24 @@ void MainWindow::initListWidget(){
     userList->addItem("CoolChat小助手{00000}");
     userList->addItems(info.split(";"));
     MyName = strlist.at(1);
+//    while(true){
+//        QString ack;
+//        while(ack.length()==0){
+//            ack = mChatClient.Qrecv();
+//        }
+//        qDebug()<<"ack = "<<ack<<"\n";
+//        QJsonParseError *error = new QJsonParseError;
+//        QJsonArray array = QJsonDocument::fromJson(ack.toLatin1(),error).array();
+//        qDebug()<<error->errorString();
+//        /*if(array.at(0).toInt() == 257){
+//            offlineMes.push_back(ack);
+//        }
+//        else*/ if(array.at(0).toInt() == 583){
+//            offlineMes.push_back(ack);
+//        }else if(array.at(0).toInt() == 256){
+//            break;
+//        }
+//    }
 }
 
 void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText)
@@ -198,6 +216,7 @@ void MainWindow::on_sendText_clicked()
         doc.setArray(arr);
         send = doc.toJson(QJsonDocument::Compact);
         mChatClient.Qsend(send);
+        offlineMes.push_back(send);
 //        ui->widgetChat->addItem("this is once",1);
     }else{
         arr.insert(0,328);arr.insert(1,send);

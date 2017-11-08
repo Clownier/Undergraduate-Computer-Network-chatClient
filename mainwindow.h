@@ -5,6 +5,7 @@
 #include "clientsocket.h"
 #include "serversocket.h"
 #include"baseheader.h"
+#include"senderwidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -27,6 +28,8 @@ private slots:
     void showOtherText(QString);
     void on_sendText_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QListWidget *userList;
@@ -42,6 +45,8 @@ private:
     std::thread otherThread;
     bool first =true;
     std::vector<QString> offlineMes;
+    QString aimIp;
+    int aimPort;
 };
 
 #endif // MAINWINDOW_H

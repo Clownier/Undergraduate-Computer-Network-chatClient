@@ -20,6 +20,17 @@
 #include<QTimer>
 #include<thread>
 #include<QTextCodec>
+#include <QObject>
+#include <QFile>
+#include <QDataStream>
+#include <QBuffer>
+#include <QHash>
+#include <QQueue>
+#include <QPair>
+#include <QThreadPool>
+#include <QVector>
+#include<QtNetwork/QHostAddress>
+#include<QUdpSocket>
 
 #define BUFLEN 255
 //#define SERVER_PORT  5050

@@ -50,7 +50,7 @@ void Chat_Client::bind(){
 
 void Chat_Client::connect() {
 
-    QSettings *configIniWrite = new QSettings("test.ini",QSettings::IniFormat);
+    QSettings *configIniWrite = new QSettings("C:\\Users\\Public\\Documents\\test.ini",QSettings::IniFormat);
     QString QserverIP = configIniWrite->value("ip/serverIP").toString();
     string serverIP = QserverIP.toStdString();
     int serverPort = configIniWrite->value("port/serverPort").toInt();

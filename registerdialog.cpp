@@ -24,11 +24,11 @@ void registerDialog::on_registerBut_clicked()
     regRePassword = ui->reg_repassword->text();
     regSecReq = ui->reg_securityReq->text();
     regSecAns = ui->reg_securityAns->text();
-    if(regPassword.length()<6){
-        QMessageBox::critical(NULL, "critical", "the password is too easy", QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
-        return;
-    }
-    else if(regPassword != regRePassword){
+//    if(regPassword.length()<6){
+//        QMessageBox::critical(NULL, "critical", "the password is too easy", QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+//        return;
+//    }
+   /* else*/ if(regPassword != regRePassword){
         QMessageBox::critical(NULL, "critical", "please confirm the password", QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
         return;
     }else{

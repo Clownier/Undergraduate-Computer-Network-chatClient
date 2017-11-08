@@ -6,6 +6,7 @@
 
 QT       += core gui
 LIBS += -lws2_32
+QT       += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Cool_ChatClient
@@ -33,7 +34,8 @@ SOURCES += \
     chatbubble.cpp \
     myapp.cpp \
     serversocket.cpp \
-    forgetdialog.cpp
+    forgetdialog.cpp \
+    senderwidget.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,13 +46,15 @@ HEADERS += \
     chatbubble.h \
     myapp.h \
     serversocket.h \
-    forgetdialog.h
+    forgetdialog.h \
+    senderwidget.h
 
 FORMS += \
         mainwindow.ui \
     logindialog.ui \
     registerdialog.ui \
-    forgetdialog.ui
+    forgetdialog.ui \
+    senderwidget.ui
 
 DISTFILES += \
     ../build-Cool_ChatClient-Desktop_Qt_5_9_1_MinGW_32bit-Debug/test.ini

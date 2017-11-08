@@ -86,6 +86,9 @@ void MainWindow::recv(){
         }else if(array.at(0).toInt() == 328){
             QString text = array.at(1).toString();
             emit getData(text);
+        }else if(array.at(1).toInt() == 321){
+            QWidget *w = new QWidget(this);
+            w->show();
         }
     }
 }
@@ -132,24 +135,6 @@ void MainWindow::initListWidget(){
     userList->addItems(info.split(";"));
     MyName = strlist.at(1);
     ui->MyName->setText("Your Name is "+MyName);
-//    while(true){
-//        QString ack;
-//        while(ack.length()==0){
-//            ack = mChatClient.Qrecv();
-//        }
-//        qDebug()<<"ack = "<<ack<<"\n";
-//        QJsonParseError *error = new QJsonParseError;
-//        QJsonArray array = QJsonDocument::fromJson(ack.toLatin1(),error).array();
-//        qDebug()<<error->errorString();
-//        /*if(array.at(0).toInt() == 257){
-//            offlineMes.push_back(ack);
-//        }
-//        else*/ if(array.at(0).toInt() == 583){
-//            offlineMes.push_back(ack);
-//        }else if(array.at(0).toInt() == 256){
-//            break;
-//        }
-//    }
 }
 
 void MainWindow::on_userListWidget_currentTextChanged(const QString &currentText)
